@@ -1,0 +1,71 @@
+﻿@if (ViewData["ShowNavbar"] as bool? != false)
+{
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
+        <div class="container d-flex align-items-center">
+            <a class="navbar-brand me-auto" href="@Url.Action("Index", "ÜrünListele", new {category = "All"})">Logo</a>
+
+            <!-- Mobilde Filtreleme ve Arama Butonu Navbar İçinde (Mobil Menü Butonunun Solunda) -->
+            <div class="d-lg-none d-flex order-1 me-2">
+                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.098zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>
+                </button>
+                <button class="btn btn-secondary btn-sm ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+                        <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z" />
+                    </svg>
+                </button>
+            </div>
+
+            <button class="navbar-toggler order-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav d-flex ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "ÜrünListele", new {category = "All"})">Ürünler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "SiparişlerListele", new {process = "Yeni Giriş"})">Siparişler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Hizmetler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">İletişim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Ayarlar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobilde Arama Kutusu (Gizlenmiş) -->
+    <div class="container d-lg-none mt-2">
+        <div id="mobileSearch" class="collapse">
+            <div class="card card-body">
+                <form class="d-flex" asp-action="Index" asp-controller="ÜrünAra" method="post">
+                    <div class="input-group">
+                        <input type="text" name="searchTerm" class="form-control bg-light border-0" placeholder="Arama">
+                        <button class="btn btn-primary" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.098zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobilde Filtreleme Seçenekleri (Gizlenmiş) -->
+    <div class="container d-lg-none mt-2">
+        <div id="mobileFilter" class="collapse">
+            <div class="card card-body">
+                <label for="filterType" class="form-label">Filtre Kriteri</label>
+                <select name="filterType" id="filterType" class="form-select mb-2">
+                    <option value="orderNo">Sipariş No</option>
+                    <option value="name">İsim</option>
+                    <option value="product">Ürün</option>
+                    <option value="size">Ölçü</option>
+                </select>
+                <input type="text" name="filterValue" id="filterValue" class="form-control mb-2" placeholder="Değer girin">
+                <button type="submit" class="btn btn-primary w-100">Uygula</button>
+            </div>
+        </div>
+    </div>
+}

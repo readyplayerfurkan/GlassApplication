@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "ISINCAM Login";
+}
+
+<body class="bg-gradient-primary">
+    <div class="container">
+
+        @if(TempData["HataMesaji"] != null)
+        {
+            <div class="alert alert-danger mt-5">@TempData["HataMesaji"]</div>
+        }
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Hoş Geldiniz!</h1>
+                                    </div>
+                                    <form class="user" method="post" action="@Url.Action("KullaniciyiKontrolEt","Login")">
+                                        <div class="form-group">
+                                            <input type="text" name="username" class="form-control form-control-user"
+                                            id="exampleInputEmail" aria-describedby="emailHelp"
+                                            placeholder="Kullanıcı Kodu">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control form-control-user"
+                                            id="exampleInputPassword" placeholder="Şifre">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Giriş Yap
+                                        </button>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="forgot-password.html">Şifremi Unuttum</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Firma Seçimi Modalı -->
+        <div class="modal fade" id="firmaSecModal" tabindex="-1" role="dialog" aria-labelledby="firmaSecLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="firmaSecLabel">Firma Seçimi</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="@Url.Action("FirmaSeç", "ÜrünListele")">
+                            <div class="form-group">
+                                <label for="firma">Lütfen işlem yapmak istediğiniz firmayı seçiniz:</label>
+                                <select name="firmaKodu" class="form-control">
+                                    @if (TempData["GirişYapıldıMı"] != null)
+                                    {
+                                        @if (ViewBag.Firmalar == null || !(ViewBag.Firmalar is IEnumerable<string>))
+                                        {
+                                            <option value="empty">Adınıza tanımlı firma bulunamadı.</option>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var firma in ViewBag.Firmalar as IEnumerable<string>)
+                                            {
+                                                <option value="@firma">@firma</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Devam Et</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var firmaSecimiGoster = '@TempData["FirmaSecimi"]';
+            if (firmaSecimiGoster === 'true') {
+                $('#firmaSecModal').modal('show');
+            }
+        });
+    </script>
+}
+

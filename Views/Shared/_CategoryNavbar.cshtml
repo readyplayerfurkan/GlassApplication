@@ -1,0 +1,30 @@
+﻿@if (ViewData["ShowCategoryNavbar"] as bool? != false)
+{
+    <style>
+        .fixed-width-btn {
+            width: 50px; /* Sabit genişlik */
+            height: 40px; /* Sabit yükseklik (İsteğe bağlı) */
+            white-space: normal; /* Uzun yazılar alt satıra geçsin */
+            text-align: center; /* Yazıyı yatayda ortalar */
+            display: flex; /* İçeriği dikeyde ortalamak için */
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            font-size: 10px;
+        }
+    </style>
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <ul class="navbar-nav d-flex flex-wrap flex-row justify-content-center w-100">
+                <li class="nav-item p-1"><a class="nav-link btn-primary text-light rounded-3 fixed-width-btn" href="@Url.Action("Index","ÜrünListele",new {category = "Tek Cam"})">Tek Camlar</a></li>
+                <li class="nav-item p-1"><a class="nav-link btn-success text-light rounded-3 fixed-width-btn" href="@Url.Action("Index","ÜrünListele", new {category = "Çift Lamine"})">Lamine</a></li>
+                <li class="nav-item p-1"><a class="nav-link btn-success text-light rounded-3 fixed-width-btn" href="@Url.Action("Index","ÜrünListele", new {category = "ÖzelLamine"})">Özel Lamine</a></li>
+                <li class="nav-item p-1"><a class="nav-link btn-success text-light rounded-3 fixed-width-btn" href="@Url.Action("Index","ÜrünListele", new {category = "Çift Cam Üniteleri"})">Uniteler</a></li>
+                <li class="nav-item p-1"><a class="nav-link btn-primary text-light rounded-3 fixed-width-btn" href="@Url.Action("Index","ÜrünListele", new {category = "Ünite Malzemeleri"})">Ünite Mlz.</a></li>
+                <li class="nav-item p-1"><a class="nav-link btn-primary text-light rounded-3 fixed-width-btn" href="@Url.Action("Index","ÜrünListele", new {category = "Diğer"})">Diğer</a></li>
+            </ul>
+        </div>
+    </nav>
+}
+

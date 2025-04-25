@@ -1,0 +1,31 @@
+﻿@if (ViewData["ShowProcessNavbar"] as bool? != false)
+{
+    <style>
+        .fixed-width-btn {
+            width: 35px; /* Sabit genişlik */
+            height: 30px; /* Sabit yükseklik (İsteğe bağlı) */
+            white-space: normal; /* Uzun yazılar alt satıra geçsin */
+            text-align: center; /* Yazıyı yatayda ortalar */
+            display: flex; /* İçeriği dikeyde ortalamak için */
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            font-size: 10px;
+        }
+    </style>
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <ul class="navbar-nav d-flex flex-wrap flex-row justify-content-center w-100">
+                <li class="nav-item p-1"><a class="nav-link btn-primary text-light rounded-3 fixed-width-btn" href="@Url.Action("Index", "SiparişlerListele", new {process = "Yeni Giriş"})">Yeni</a></li>  
+                <li class="nav-item p-1"><a class="nav-link text-dark rounded-3 fixed-width-btn" style="background-color: #d4edda;" href="@Url.Action("Index", "SiparişlerListele", new {process = "Kesim"})">Kesim</a></li>
+                <li class="nav-item p-1"><a class="nav-link text-dark rounded-3 fixed-width-btn" style="background-color: #75c975;" href="@Url.Action("Index", "SiparişlerListele", new {process = "Sipariş e Aktarıldı"})">Eksik</a></li>
+                <li class="nav-item p-1"><a class="nav-link text-light rounded-3 fixed-width-btn" style="background-color: #4caf50;" href="@Url.Action("Index", "SiparişlerListele", new {process = "Hazır Tamamı"})">Hazır</a></li>
+                <li class="nav-item p-1"><a class="nav-link text-light rounded-3 fixed-width-btn" style="background-color: #388e3c;" href="@Url.Action("Index", "SiparişlerListele", new {process = "İptal"})">-İptal</a></li>
+                <li class="nav-item p-1"><a class="nav-link text-light rounded-3 fixed-width-btn" style="background-color: #1b5e20;" href="@Url.Action("Index", "SiparişlerListele", new {process = "Sevk/Teslim Edildi"})">Tamam</a></li>
+            </ul>
+        </div>
+    </nav>
+
+}
+
