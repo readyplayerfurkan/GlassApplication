@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using GlassApplication.Models;
 using GlassApplication.Models.Abstract;
@@ -7,14 +6,10 @@ namespace GlassApplication.Controllers;
 
 public class ÜrünListeleController : Controller
 {
-    private readonly ILogger<ÜrünListeleController> _logger;
-    private readonly IÜrünService _ürünService;
     private readonly IÜrünRepository _ürünRepository;
 
-    public ÜrünListeleController(ILogger<ÜrünListeleController> logger, IÜrünService ürünService, IÜrünRepository ürünRepository)
+    public ÜrünListeleController(IÜrünRepository ürünRepository)
     {
-        _logger = logger;
-        _ürünService = ürünService;
         _ürünRepository = ürünRepository;
     }
 
@@ -27,28 +22,31 @@ public class ÜrünListeleController : Controller
         }
 
         // Örneðin redirect ile kullanýcýyý ürün listesine yönlendirebilirsin:
-        return RedirectToAction("Index", "ÜrünListele", new { category = "All" });
+        return RedirectToAction("Index", "ÜrünListele", new { category = "Tek Cam" });
     }
 
 
-    public IActionResult Index(string category)
+    public IActionResult Index(string category, string searchTerm, bool IsItSearched, int sayfa = 1)
     {
         ViewData["ShowProcessNavbar"] = false;
+        ViewData["ShowCategoryNavbar"] = true;
+        ViewData["category"] = category;
 
-        if(category != "FromSearch")
-            _ürünService.ListByCategory(category);
+        int toplamÜrünSayýsý = _ürünRepository.GetAll(category, searchTerm, IsItSearched).Count;
+            
+        var ürünler = _ürünRepository.GetAll(category, searchTerm, IsItSearched)
+            .Skip((sayfa - 1) * 9)
+            .Take(9)
+            .ToList();
 
-        return View(_ürünRepository.GetAll());
-    }
+        var model = new ÜrünListViewModel
+        {
+            Ürünler = ürünler,
+            ToplamÜrünSayýsý = toplamÜrünSayýsý,
+            MevcutSayfa = sayfa,
+            ToplamSayfa = (int)Math.Ceiling((double)toplamÜrünSayýsý / 9)
+        };
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(model);
     }
 }

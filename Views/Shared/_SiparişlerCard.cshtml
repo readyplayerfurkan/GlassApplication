@@ -1,124 +1,246 @@
-﻿@model List<GlassApplication.Models.SiparişModel>
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Listesi</title>
+    <style>
+        /* Sayfa numaraları kutusu */
+        .page-num-container {
+            display: flex;
+            overflow-x: auto; /* Yalnızca yatay kaydırma */
+            white-space: nowrap; /* Sayfa numaralarını yatayda sıralar */
+            padding: 10px 0;
+            margin: 0 auto;
+            width: 100%; /* Kutu genişliği */
+        }
 
-<div class="row">
-    @foreach (var sipariş in Model)
-    {
-        if (sipariş.IsItSearched)
+            .page-num-container .page-link {
+                margin: 0 5px;
+                cursor: pointer;
+            }
+
+            /* Sayfa numaraları kutusu içinde kaydırma efekti */
+            .page-num-container::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .page-num-container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 4px;
+            }
+
+                .page-num-container::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                }
+
+        /* Ürün kartı stil */
+        .card-body {
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    @model GlassApplication.Models.SiparişListViewModel
+    @using Azure.Core
+
+    <div class="row">
+        @foreach (var sipariş in Model.Siparişler)
         {
-            <div class="col-sm-4 p-3">
-                <div class="bs-component">
-                    <div class="card mb-3">
-                        <!-- Kategori adı ve Görsel -->
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
-                                    <div class="w-100 h-100 d-flex justify-content-center align-items-center border border-primary" style="background-color: white; border-color: cornflowerblue;">
-                                    </div>
-                                </div>
-
-                                <!-- Yazı ve Açıklama (5'te 4) -->
-                                <div class="col-10 d-flex flex-column" style="min-height: 40px;">
-                                    <!-- Sol üstte sabit açıklama -->
-                                    <div class="d-flex align-items-center justify-content-start" style="padding-left: 3px;">
-                                        <strong><p class="m-0" style="font-size: 16px;">@sipariş.firma</p></strong>
+            if (sipariş.IsItSearched)
+            {
+                <div class="col-sm-4 p-3">
+                    <div class="bs-component">
+                        <div class="card mb-3">
+                            <!-- Kategori adı ve Görsel -->
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
+                                        <div class="w-100 h-100 d-flex justify-content-center align-items-center border border-primary" style="background-color: white; border-color: cornflowerblue;">
+                                        </div>
                                     </div>
 
-                                    <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <p class="m-0" style="font-size: 8px;">
-                                            Sipariş Tutarı : @sipariş.tutar_net TL
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <!-- Yazı ve Açıklama (5'te 4) -->
+                                    <div class="col-10 d-flex flex-column" style="min-height: 40px;">
+                                        <!-- Sol üstte sabit açıklama -->
+                                        <div class="d-flex align-items-center justify-content-start" style="padding-left: 3px;">
+                                            <strong><p class="m-0" style="font-size: 16px;">@sipariş.ca_adi</p></strong>
+                                        </div>
 
-                        <!-- Proje -->
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
-                                    <div class="w-100 h-100 d-flex justify-content-center align-items-center text-light" style="background-color: dodgerblue;">
-                                        <strong>@sipariş.top_uretilecek_adet</strong>
-                                    </div>
-                                </div>
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">
+                                                Müşteri : @sipariş.musteri_adi
+                                            </p>
 
-                                <!-- Yazı ve Açıklama (5'te 4) -->
-                                <div class="col-10 d-flex flex-column" style="min-height: 40px;">
-                                    <!-- Sol üstte sabit açıklama -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <strong><p class="m-0" style="font-size: 16px;">Sipariş Durumu : @sipariş.siparis_DRM</p></strong>
-                                    </div>
+                                        </div>
 
-                                    <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <p class="m-0" style="font-size: 8px;">
-                                            Tahmini Termin Tarihi : @sipariş.termin_tarih?.ToString("dd/MM/yyyy")
-                                        </p>
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">
+                                                Sipariş No : @sipariş.sip_id
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Sipariş -->
-                            <div class="row mt-2">
-                                <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
-                                    <div class="w-100 h-100 d-flex justify-content-center align-items-center text-light" style="background-color: dodgerblue;">
-                                        <strong>@sipariş.top_uretilen_adet</strong>
+                            <!-- Proje -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
+                                        <div class="w-100 h-100 d-flex justify-content-center align-items-center text-light" style="background-color: dodgerblue;">
+                                            <strong>@sipariş.top_uretilecek_adet</strong>
+                                        </div>
+                                    </div>
+
+                                    <!-- Yazı ve Açıklama (5'te 4) -->
+                                    <div class="col-10 d-flex flex-column" style="min-height: 40px;">
+                                        <!-- Sol üstte sabit açıklama -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <strong><p class="m-0" style="font-size: 16px;">Sipariş Durumu : @sipariş.siparis_DRM</p></strong>
+                                        </div>
+
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">
+                                                Tahmini Termin Tarihi : @sipariş.termin_tarih?.ToString("dd/MM/yyyy")
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Yazı ve Açıklama (5'te 4) -->
-                                <div class="col-10 d-flex flex-column" style="min-height: 40px;">
-                                    <!-- Sol üstte sabit açıklama -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <strong><p class="m-0" style="font-size: 16px;">@sipariş.adi0</p></strong>
+                                <!-- Sipariş -->
+                                <div class="row mt-2">
+                                    <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
+                                        <div class="w-100 h-100 d-flex justify-content-center align-items-center text-light" style="background-color: dodgerblue;">
+                                            <strong>@sipariş.top_uretilen_adet</strong>
+                                        </div>
                                     </div>
 
-                                    <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <p class="m-0" style="font-size: 8px;">Açıklama : @sipariş.aciklama</p>
+                                    <!-- Yazı ve Açıklama (5'te 4) -->
+                                    <div class="col-10 d-flex flex-column" style="min-height: 40px;">
+                                        <!-- Sol üstte sabit açıklama -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <strong><p class="m-0" style="font-size: 16px;">@sipariş.adi0</p></strong>
+                                        </div>
+
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">Açıklama : @sipariş.aciklama</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>                           
 
-                            <!-- Ürün -->
-                            <div class="row mt-2">
-                                <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
-                                    <div class="w-100 h-100 d-flex justify-content-center align-items-center" style="background-color: cornsilk;">
-                                        <strong>@sipariş.top_uretim_kalan_adet</strong>
-                                    </div>
-                                </div>
-
-                                <!-- Yazı ve Açıklama (5'te 4) -->
-                                <div class="col-10 d-flex flex-column" style="min-height: 40px;">
-                                    <!-- Sol üstte sabit açıklama -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <strong><p class="m-0 lh-sm" style="font-size: 16px; letter-spacing: 0.2px;">@sipariş.adi1</p></strong>
+                                <!-- Ürün -->
+                                <div class="row mt-2">
+                                    <div class="col-2 d-flex align-items-center justify-content-center" style="min-height: 40px;">
+                                        <div class="w-100 h-100 d-flex justify-content-center align-items-center" style="background-color: cornsilk;">
+                                            <strong>@sipariş.top_uretim_kalan_adet</strong>
+                                        </div>
                                     </div>
 
-                                    <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <p class="m-0" style="font-size: 8px;">Toplam Üretilecek Adet : @sipariş.top_uretilecek_adet</p>
-                                    </div>
+                                    <!-- Yazı ve Açıklama (5'te 4) -->
+                                    <div class="col-10 d-flex flex-column" style="min-height: 40px;">
+                                        <!-- Sol üstte sabit açıklama -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <strong><p class="m-0 lh-sm" style="font-size: 16px; letter-spacing: 0.2px;">@sipariş.adi1</p></strong>
+                                        </div>
 
-                                    <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <p class="m-0" style="font-size: 8px;">Toplam Üretilen Adet : @sipariş.top_uretilen_adet</p>
-                                    </div>
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">Toplam Üretilecek Adet : @sipariş.top_uretilecek_adet</p>
+                                        </div>
 
-                                    <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
-                                    <div class="d-flex align-items-start" style="padding-left: 3px;">
-                                        <p class="m-0" style="font-size: 8px;">Toplam Kalan Adet : @sipariş.top_uretim_kalan_adet</p>
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">Toplam Üretilen Adet : @sipariş.top_uretilen_adet</p>
+                                        </div>
+
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">Toplam Kalan Adet : @sipariş.top_uretim_kalan_adet</p>
+                                        </div>
+
+                                        <!-- Alt açıklama alanı (font büyüklüğü yarısı) -->
+                                        <div class="d-flex align-items-start" style="padding-left: 3px;">
+                                            <p class="m-0" style="font-size: 8px;">Teslim Tarihi : @sipariş.teslim_tarih.ToString("dd-MM-yyyy")</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="card-footer text-center">
-                            <button class="btn btn-primary w-100">Görüş veya talep bildir.</button>
+                            <div class="card-footer text-center">
+                                <button class="btn btn-primary w-100">Görüş veya talep bildir.</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
-    }
-</div>
+    </div>
+
+    <!-- Sayfalama -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <ul class="pagination justify-content-center flex-wrap">
+                <li class="page-item @(Model.MevcutSayfa == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?process=@ViewData["process"]&sayfa=1" aria-label="İlk">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item @(Model.MevcutSayfa == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?process=@ViewData["process"]&sayfa=@(Model.MevcutSayfa - 1)" aria-label="Önceki">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+
+                @* Sayfa numaraları: sadece aktif sayfanın çevresini göster *@
+                @{
+                    int startPage = Model.MevcutSayfa - 2;
+                    int endPage = Model.MevcutSayfa + 2;
+
+                    if (startPage < 1)
+                    {
+                        endPage += (1 - startPage);
+                        startPage = 1;
+                    }
+
+                    if (endPage > Model.ToplamSayfa)
+                    {
+                        endPage = Model.ToplamSayfa;
+                    }
+
+                    if (startPage > 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+
+                    for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == Model.MevcutSayfa ? "active" : "")">
+                            <a class="page-link" href="?process=@ViewData["process"]&sayfa=@i">@i</a>
+                        </li>
+                    }
+
+                    if (endPage < Model.ToplamSayfa)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+                }
+
+                <li class="page-item @(Model.MevcutSayfa == Model.ToplamSayfa ? "disabled" : "")">
+                    <a class="page-link" href="?process=@ViewData["process"]&sayfa=@(Model.MevcutSayfa + 1)" aria-label="Sonraki">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item @(Model.MevcutSayfa == Model.ToplamSayfa ? "disabled" : "")">
+                    <a class="page-link" href="?process=@ViewData["process"]&sayfa=@Model.ToplamSayfa" aria-label="Son">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>

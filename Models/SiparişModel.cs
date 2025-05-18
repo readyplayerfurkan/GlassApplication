@@ -11,6 +11,10 @@ namespace GlassApplication.Models
         public string? cc_giris_kul_adi { get; set; }
         public int? cc_siparis_durumu { get; set; }
         public string? aciklama { get; set; }
+        public string? ca_adi { get; set; }
+        public string? musteri_adi { get; set; }
+        public int sip_no { get; set; } 
+        public DateTime teslim_tarih { get; set; }
         public string? siparis_DRM { get; set; }
         public string? adi0 { get; set; }
         public string? adi1 { get; set; }

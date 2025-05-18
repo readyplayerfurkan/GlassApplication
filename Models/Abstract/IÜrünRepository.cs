@@ -2,6 +2,6 @@
 {
     public interface IÜrünRepository
     {
-        List<ÜrünModel> GetAll();
+        List<ÜrünModel> GetAll(string category, string searchTerm, bool IsItSearched);
     }
 }

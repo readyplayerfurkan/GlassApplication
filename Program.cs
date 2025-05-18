@@ -13,7 +13,6 @@ namespace GlassApplication
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IÜrünService, ÜrünService>();
             builder.Services.AddScoped<IÜrünRepository, ÜrünRepository>();
             builder.Services.AddScoped<ISipariþRepository, SipariþRepository>();
             builder.Services.AddScoped<ISipariþService, SipariþService>();
