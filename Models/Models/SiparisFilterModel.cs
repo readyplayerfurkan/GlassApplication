@@ -1,6 +1,6 @@
 ﻿namespace GlassApplication.Models
 {
-    public class SiparisFilter
+    public class SiparisFilterModel
     {
         public string? CaAdi { get; set; }
         public string? MusteriAdi { get; set; }
@@ -8,7 +8,7 @@
         public DateTime? TeslimTarihStart { get; set; }
         public DateTime? TeslimTarihEnd { get; set; }
 
-        public SiparisFilter() { }
+        public SiparisFilterModel() { }
     }
 
 }

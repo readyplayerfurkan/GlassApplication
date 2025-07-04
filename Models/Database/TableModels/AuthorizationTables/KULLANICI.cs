@@ -1,6 +1,6 @@
 ﻿namespace GlassApplication.Models.Database
 {
-    public class Kullanici
+    public class KULLANICI
     {
         public int ID { get; set; }
         public string KOD { get; set; }

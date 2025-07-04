@@ -4,27 +4,14 @@ using GlassApplication.Models.Abstract;
 
 namespace GlassApplication.Controllers;
 
-public class ÜrünListeleController : Controller
+public class ÃœrÃ¼nListeleController : Controller
 {
-    private readonly IÜrünRepository _ürünRepository;
+    private readonly IÃœrÃ¼nRepository _Ã¼rÃ¼nRepository;
 
-    public ÜrünListeleController(IÜrünRepository ürünRepository)
+    public ÃœrÃ¼nListeleController(IÃœrÃ¼nRepository Ã¼rÃ¼nRepository)
     {
-        _ürünRepository = ürünRepository;
+        _Ã¼rÃ¼nRepository = Ã¼rÃ¼nRepository;
     }
-
-    [HttpPost]
-    public IActionResult FirmaSeç(string firmaKodu)
-    {
-        if (!string.IsNullOrEmpty(firmaKodu) && firmaKodu != "empty")
-        {
-            HttpContext.Session.SetString("SeçilenFirma", firmaKodu);
-        }
-
-        // Örneðin redirect ile kullanýcýyý ürün listesine yönlendirebilirsin:
-        return RedirectToAction("Index", "ÜrünListele", new { category = "Tek Cam" });
-    }
-
 
     public IActionResult Index(string category, string searchTerm, bool IsItSearched, int sayfa = 1)
     {
@@ -32,21 +19,21 @@ public class ÜrünListeleController : Controller
         ViewData["ShowCategoryNavbar"] = true;
         ViewData["category"] = category;
 
-        int toplamÜrünSayýsý = _ürünRepository.GetAll(category, searchTerm, IsItSearched).Count;
+        int toplamÃœrÃ¼nSayÄ±sÄ± = _Ã¼rÃ¼nRepository.GetAll(category, searchTerm, IsItSearched).Count;
             
-        var ürünler = _ürünRepository.GetAll(category, searchTerm, IsItSearched)
+        var Ã¼rÃ¼nler = _Ã¼rÃ¼nRepository.GetAll(category, searchTerm, IsItSearched)
             .Skip((sayfa - 1) * 9)
             .Take(9)
             .ToList();
 
-        var model = new ÜrünListViewModel
+        var model = new ÃœrÃ¼nListViewModel
         {
-            Ürünler = ürünler,
-            ToplamÜrünSayýsý = toplamÜrünSayýsý,
+            ÃœrÃ¼nler = Ã¼rÃ¼nler,
+            ToplamÃœrÃ¼nSayÄ±sÄ± = toplamÃœrÃ¼nSayÄ±sÄ±,
             MevcutSayfa = sayfa,
-            ToplamSayfa = (int)Math.Ceiling((double)toplamÜrünSayýsý / 9)
+            ToplamSayfa = (int)Math.Ceiling((double)toplamÃœrÃ¼nSayÄ±sÄ± / 9)
         };
-
+        
         return View(model);
     }
 }

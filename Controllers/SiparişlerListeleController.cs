@@ -1,23 +1,24 @@
 ﻿using GlassApplication.Models;
 using GlassApplication.Models.Abstract;
+using GlassApplication.Models.Database.TableModels.ContentTables;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GlassApplication.Controllers
 {
-    public class SiparişlerListele : Controller
+    public class SiparişlerListeleController : Controller
     {
         private readonly ISiparişRepository siparişRepository;
         
-        public SiparişlerListele(ISiparişRepository siparişRepository)
+        public SiparişlerListeleController(ISiparişRepository siparişRepository)
         {
             this.siparişRepository = siparişRepository;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string process, [FromQuery] SiparisFilter filter, int sayfa = 1)
+        public async Task<IActionResult> Index(string process, [FromQuery] SiparisFilterModel filterModel, int sayfa = 1)
         {
             // Filtreyi null ise varsayılan bir değerle başlatıyoruz
-            filter ??= new SiparisFilter();
+            filterModel ??= new SiparisFilterModel();
 
             ViewData["ShowCategoryNavbar"] = false;
             ViewData["ShowProcessNavbar"] = true;
@@ -27,7 +28,7 @@ namespace GlassApplication.Controllers
             var tümSiparişler = await siparişRepository.GetSiparişlerAsync(process);
 
             // Filtreyi uygula
-            var filtrelenmişSiparişler = FilterSiparisler(tümSiparişler, filter);
+            var filtrelenmişSiparişler = FilterSiparisler(tümSiparişler, filterModel);
 
             // Toplam sipariş sayısını alıyoruz
             var toplamSiparişSayısı = filtrelenmişSiparişler.Count;
@@ -44,39 +45,39 @@ namespace GlassApplication.Controllers
                 ToplamSiparişSayısı = toplamSiparişSayısı,
                 MevcutSayfa = sayfa,
                 ToplamSayfa = (int)Math.Ceiling((double)toplamSiparişSayısı / 9),
-                Filtre = filter // Filtreyi modele dahil ettik
+                Filtre = filterModel // Filtreyi modele dahil ettik
             };
 
             return View(model);
         }
 
-        public List<SiparişModel> FilterSiparisler(List<SiparişModel> siparişler, SiparisFilter filter)
+        public List<SiparisModel> FilterSiparisler(List<SiparisModel> siparişler, SiparisFilterModel filterModel)
         {
             var filteredSiparişler = siparişler.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(filter.CaAdi))
+            if (!string.IsNullOrWhiteSpace(filterModel.CaAdi))
             {
-                filteredSiparişler = filteredSiparişler.Where(s => s.ca_adi.Contains(filter.CaAdi, StringComparison.OrdinalIgnoreCase));
+                filteredSiparişler = filteredSiparişler.Where(s => s.ca_adi.Contains(filterModel.CaAdi, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (!string.IsNullOrWhiteSpace(filter.MusteriAdi))
+            if (!string.IsNullOrWhiteSpace(filterModel.MusteriAdi))
             {
-                filteredSiparişler = filteredSiparişler.Where(s => s.musteri_adi.Contains(filter.MusteriAdi, StringComparison.OrdinalIgnoreCase));
+                filteredSiparişler = filteredSiparişler.Where(s => s.musteri_adi.Contains(filterModel.MusteriAdi, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (filter.SiparisId.HasValue)
+            if (filterModel.SiparisId.HasValue)
             {
-                filteredSiparişler = filteredSiparişler.Where(s => s.sip_id == filter.SiparisId.Value);
+                filteredSiparişler = filteredSiparişler.Where(s => s.sip_id == filterModel.SiparisId.Value);
             }
 
-            if (filter.TeslimTarihStart.HasValue)
+            if (filterModel.TeslimTarihStart.HasValue)
             {
-                filteredSiparişler = filteredSiparişler.Where(s => s.teslim_tarih >= filter.TeslimTarihStart.Value);
+                filteredSiparişler = filteredSiparişler.Where(s => s.teslim_tarih >= filterModel.TeslimTarihStart.Value);
             }
 
-            if (filter.TeslimTarihEnd.HasValue)
+            if (filterModel.TeslimTarihEnd.HasValue)
             {
-                filteredSiparişler = filteredSiparişler.Where(s => s.teslim_tarih <= filter.TeslimTarihEnd.Value);
+                filteredSiparişler = filteredSiparişler.Where(s => s.teslim_tarih <= filterModel.TeslimTarihEnd.Value);
             }
 
             return filteredSiparişler.ToList();

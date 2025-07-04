@@ -1,6 +1,7 @@
 ﻿using GlassApplication.Models.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using GlassApplication.Models;
 
 namespace GlassApplication.Controllers
 {
@@ -33,7 +34,7 @@ namespace GlassApplication.Controllers
                 var firmalarJson = _httpContextAccessor.HttpContext.Session.GetString("Firmalar");
                 if (!string.IsNullOrEmpty(firmalarJson))
                 {
-                    var firmalar = JsonSerializer.Deserialize<List<string>>(firmalarJson);
+                    var firmalar = JsonSerializer.Deserialize<List<Firma>>(firmalarJson);
                     ViewBag.Firmalar = firmalar;
                 }
 

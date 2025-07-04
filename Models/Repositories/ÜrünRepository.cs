@@ -1,20 +1,39 @@
-﻿using GlassApplication.Models.Abstract;
+﻿using System.Text.Json;
+using GlassApplication.Models.Abstract;
 using GlassApplication.Models.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace GlassApplication.Models
 {
     public class ÜrünRepository : IÜrünRepository
     {
-        private readonly GW_TEST_2025 _dbContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IConfiguration _configuration;
 
-        public ÜrünRepository(GW_TEST_2025 dbContext)
+        public ÜrünRepository(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
-            _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
         }
 
         public List<ÜrünModel> GetAll(string category, string searchTerm, bool IsItSearched)
         {
-            // Veritabanından tüm ürünleri çekiyoruz
+            var firmalarJson = _httpContextAccessor.HttpContext.Session.GetString("Firmalar");
+            var firmalar = JsonSerializer.Deserialize<List<Firma>>(firmalarJson);
+            var firmaId = _httpContextAccessor.HttpContext.Session.GetInt32("SeçilenFirmaID");
+            
+            var seciliFirma = firmalar.Find(x => x.ID == firmaId);
+           
+            var cariId = _httpContextAccessor.HttpContext.Session.GetInt32("SeciliCariId");
+            var baseConnection = _configuration.GetConnectionString("ContentDatabaseConnection");
+            var connectionString = $"{baseConnection};Database={seciliFirma.KOD}";
+
+            var options = new DbContextOptionsBuilder<ContentDatabase>()
+                .UseSqlServer(connectionString)
+                .Options;
+            
+            using var _dbContext = new ContentDatabase(options);
+
             var ürünler = (from s in _dbContext.STOK
                            join t in _dbContext.STOK_TURU on (int)s.cam_tek_cift equals t.ID into tGroup
                            from t in tGroup.DefaultIfEmpty()
@@ -30,7 +49,7 @@ namespace GlassApplication.Models
                                Renk = s.renk,
                                Kalınlık = (float?)s.cam_kal1,
                                IsItSearched = true,
-                           }).ToList(); // ToList ile belleğe alıyoruz
+                           }).ToList();
 
             if (IsItSearched && !string.IsNullOrEmpty(searchTerm))
             {

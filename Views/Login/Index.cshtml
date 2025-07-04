@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Text.Json
+@{
     ViewData["Title"] = "ISINCAM Login";
 }
 
@@ -60,22 +61,61 @@
                         <h5 class="modal-title" id="firmaSecLabel">Firma Seçimi</h5>
                     </div>
                     <div class="modal-body">
-                        <form method="post" action="@Url.Action("FirmaSeç", "ÜrünListele")">
+                        <form method="post" action="@Url.Action("FirmaSeç", "FirmaSecim")">
                             <div class="form-group">
                                 <label for="firma">Lütfen işlem yapmak istediğiniz firmayı seçiniz:</label>
-                                <select name="firmaKodu" class="form-control">
+                                <select name="secilenFirmaID" class="form-control">
                                     @if (TempData["GirişYapıldıMı"] != null)
                                     {
-                                        @if (ViewBag.Firmalar == null || !(ViewBag.Firmalar is IEnumerable<string>))
+                                        @if (ViewBag.Firmalar == null || !(ViewBag.Firmalar is IEnumerable<Firma>))
                                         {
                                             <option value="empty">Adınıza tanımlı firma bulunamadı.</option>
                                         }
                                         else
                                         {
-                                            @foreach (var firma in ViewBag.Firmalar as IEnumerable<string>)
+                                            @foreach (var firma in ViewBag.Firmalar as IEnumerable<Firma>)
                                             {
-                                                <option value="@firma">@firma</option>
+                                                <option value="@firma.ID">@firma.ADI</option>
                                             }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Devam Et</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+         <div class="modal fade" id="cariSecModal" tabindex="-1" role="dialog" aria-labelledby="cariSecLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cariSecLabel">Cari Seçimi</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="@Url.Action("Index", "CariSecim")">
+                            <div class="form-group">
+                                <label for="firma">Lütfen işlem yapmak istediğiniz cariyi seçiniz:</label>
+                                @{
+                                    var cariListJson = TempData["CariList"] as string;
+                                    var cariList = string.IsNullOrWhiteSpace(cariListJson)
+                                        ? new List<Cari>()
+                                        : JsonSerializer.Deserialize<List<Cari>>(cariListJson);
+                                }
+                                <select name="secilenCariID" class="form-control">
+                                    @if (cariList == null || !cariList.Any())
+                                    {
+                                        <option value="empty">Adınıza tanımlı cari bulunamadı.</option>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var cari in cariList)
+                                        {
+                                            <option value="@cari.Cari_ID">@cari.Cari_Adi</option>
                                         }
                                     }
                                 </select>
@@ -100,6 +140,12 @@
                 $('#firmaSecModal').modal('show');
             }
         });
+
+        $(document).ready(function () {
+            var cariSecimiGoster = '@TempData["CariSecimi"]';
+            if (cariSecimiGoster === 'true') {
+                $('#cariSecModal').modal('show');
+            }
+        });
     </script>
 }
-

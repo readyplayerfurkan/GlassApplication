@@ -13,19 +13,19 @@ namespace GlassApplication
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IÜrünRepository, ÜrünRepository>();
-            builder.Services.AddScoped<ISipariþRepository, SipariþRepository>();
-            builder.Services.AddScoped<ISipariþService, SipariþService>();
+            builder.Services.AddScoped<IÃœrÃ¼nRepository, ÃœrÃ¼nRepository>();
+            builder.Services.AddScoped<ISipariÅŸRepository, SipariÅŸRepository>();
+            builder.Services.AddScoped<ISipariÅŸService, SipariÅŸService>();
             builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<CariService>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            builder.Services.AddDbContext<GW_SISTEM>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("GWSISTEMConnection")));
-            builder.Services.AddDbContext<GW_TEST_2025>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("GWTest2025Connection")));
+            builder.Services.AddDbContext<AuthorizationDatabase>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("AuthorizationDatabaseConnection")));
+            builder.Services.AddDbContextFactory<ContentDatabase>(options => { }); 
 
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika oturum süresi
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });

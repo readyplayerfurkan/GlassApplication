@@ -1,7 +1,9 @@
-﻿namespace GlassApplication.Models.Abstract
+﻿using GlassApplication.Models.Database.TableModels.ContentTables;
+
+namespace GlassApplication.Models.Abstract
 {
     public interface ISiparişRepository
     {
-        public Task<List<SiparişModel>> GetSiparişlerAsync(string siparişDurumu);
+        public Task<List<SiparisModel>> GetSiparişlerAsync(string siparişDurumu);
     }
 }
